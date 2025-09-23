@@ -1,0 +1,17 @@
+package com.network.nms.dto;
+
+import lombok.Data;
+
+@Data
+public class SignUpRequest {
+    
+    /** 이름 **/
+    private String username;
+
+    /** 이메일 **/
+    private String email;
+
+    /** 비밀번호 **/
+    private String password;
+    
+}
