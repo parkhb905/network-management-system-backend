@@ -4,12 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-//@Builder
+@Builder
 public class User {
-    /** 아이디 **/
+
+    /** key **/
     private Long id;
 
-    /** 이름 **/
+    /** 아이디 **/
     private String username;
 
     /** 이메일 **/
@@ -20,4 +21,11 @@ public class User {
 
     /** 생성일자 **/
     private String createdAt;
+
+    /** 수정일자 **/
+    private String updatedAt;
+
+    /** 권한 **/
+    private String role;
+
 }

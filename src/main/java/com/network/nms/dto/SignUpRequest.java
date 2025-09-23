@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class SignUpRequest {
     
-    /** 이름 **/
+    /** 아이디 **/
     private String username;
 
     /** 이메일 **/
@@ -13,5 +13,5 @@ public class SignUpRequest {
 
     /** 비밀번호 **/
     private String password;
-    
+
 }

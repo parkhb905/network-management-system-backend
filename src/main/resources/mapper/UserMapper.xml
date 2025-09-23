@@ -6,8 +6,8 @@
 <mapper namespace="com.network.nms.mapper.UserMapper">
 
     <insert id="insertUser" parameterType="com.network.nms.domain.User">
-        INSERT INTO `user` (username, email, password)
-        VALUES (#{username}, #{email}, #{password})
+        INSERT INTO `user` (username, email, password, role)
+        VALUES (#{username}, #{email}, #{password}, #{role})
     </insert>
 
     <select id="findByUsername" parameterType="string" resultType="com.network.nms.domain.User">

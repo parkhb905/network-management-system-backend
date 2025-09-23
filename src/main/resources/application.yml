@@ -17,3 +17,7 @@ mybatis:
   type-aliases-package: com.network.nms.domain
   configuration:
     map-underscore-to-camel-case: true
+
+jwt:
+  secret: C5fxvkTIhV+zO+dUJHhzE48Pu5MOqjbC/pFO0L3XRbXfWC6P2+UX+slNwXWXXVm3
+  expiration: 3600000 # 1시간
