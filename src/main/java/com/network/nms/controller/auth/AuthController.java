@@ -1,9 +1,10 @@
-package com.network.nms.controller;
+package com.network.nms.controller.auth;
 
-import com.network.nms.dto.LoginRequest;
-import com.network.nms.dto.LoginResponse;
-import com.network.nms.dto.SignUpRequest;
-import com.network.nms.service.AuthService;
+import com.network.nms.dto.auth.LoginRequest;
+import com.network.nms.dto.auth.LoginResponse;
+import com.network.nms.dto.auth.SignUpRequest;
+import com.network.nms.dto.common.CommandResponse;
+import com.network.nms.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody SignUpRequest request) {
-        authService.register(request);
-        return ResponseEntity.ok("회원가입 성공");
+    public ResponseEntity<CommandResponse> signup(@RequestBody SignUpRequest request) {
+        int rows = authService.register(request);
+        boolean success = rows > 0 ? true : false;
+        return ResponseEntity.ok(new CommandResponse(success, rows));
     }
 
     @PostMapping("/login")

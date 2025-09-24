@@ -1,4 +1,4 @@
-package com.network.nms.mapper;
+package com.network.nms.mapper.user;
 
 import com.network.nms.domain.User;
 import org.apache.ibatis.annotations.Mapper;

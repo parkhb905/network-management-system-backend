@@ -1,4 +1,4 @@
-package com.network.nms.dto;
+package com.network.nms.dto.auth;
 
 import lombok.Getter;
 import lombok.Setter;
