@@ -1,5 +1,5 @@
 # Network Management System (네트워크 관제 시스템)
-
+  
 ## 사용 기술스택
 Java 17.0.12 
 Spring Boot(Maven) 3.5.6
@@ -10,7 +10,7 @@ Node 20.19.4
 Vite
 Amcharts5
 tailwindcss
-
+  
 ## 필수 기능 (완료 시 ✅ 처리)
 1. 사용자 
     - (Spring Security & JWT) 회원가입, 로그인&로그아웃
