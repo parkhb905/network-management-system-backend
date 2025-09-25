@@ -4,9 +4,13 @@ import com.network.nms.domain.User;
 import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;
+import com.network.nms.dto.common.CommandResponse;
+import com.network.nms.exception.CustomException;
+import com.network.nms.exception.ErrorCode;
 import com.network.nms.mapper.user.UserMapper;
 import com.network.nms.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +27,7 @@ public class AuthService {
      * @param request
      * @return
      */
-    public int register(SignUpRequest request) {
+    public CommandResponse register(SignUpRequest request) {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -31,13 +35,18 @@ public class AuthService {
                 .role("USER")
                 .build();
 
-        int result = userMapper.insertUser(user);
+        try {
+            int result = userMapper.insertUser(user);
 
-        if (result != 1) {
-            throw new IllegalStateException("회원가입에 실패했습니다.");
+            if (result != 1) {
+                throw new CustomException(ErrorCode.DB_INSERT_FAILED);
+            }
+
+            return new CommandResponse(true, result);
+        } catch(DuplicateKeyException e) {
+            throw new CustomException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
 
-        return result;
     }
 
     /**
@@ -48,9 +57,8 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         User user = userMapper.findByUsername(request.getUsername());
 
-        // 로그인 실패
-        if(user == null) return new LoginResponse(null);
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) return new LoginResponse(null);
+        if(user == null) throw new CustomException(ErrorCode.AUTH_USER_NOT_FOUND);
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new CustomException(ErrorCode.AUTH_INVALID_PASSWORD); // encode() 값 달라질 수 있으므로 matches()로 비교.
 
         // 로그인 성공 -> JWT 발급
         String token = jwtTokenProvider.generateToken(user.getUsername());

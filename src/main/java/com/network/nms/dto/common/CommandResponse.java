@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandResponse extends BaseResponse{
+public class CommandResponse extends BaseResponse {
 
     /** 영향받은 행 갯수 **/
     private int rowsAffected;

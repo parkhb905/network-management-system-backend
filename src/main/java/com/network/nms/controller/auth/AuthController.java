@@ -21,9 +21,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<CommandResponse> signup(@RequestBody SignUpRequest request) {
-        int rows = authService.register(request);
-        boolean success = rows > 0 ? true : false;
-        return ResponseEntity.ok(new CommandResponse(success, rows));
+        CommandResponse response = authService.register(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
