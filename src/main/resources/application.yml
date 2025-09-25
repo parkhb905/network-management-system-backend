@@ -1,12 +1,24 @@
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS # 콘솔 출력에 ANSI 색상 코드 사용.
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3307/nms_db
     username: nms_user
     password: nms_user
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 120MB
 
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 logging:
   level:
@@ -16,7 +28,12 @@ mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.network.nms.domain
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: true # DB의 언더스코어 네이밍을 카멜 케이스로 자동 매핑.
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # SQL 로깅 구현체 설정.
+  logging:
+    level:
+      org.apache.ibatis: DEBUG # MyBatis 로깅 레벨을 DEBUG로 설정하여 실행되는 SQL 쿼리와 내부 로깅 정보를 콘솔에 출력.
+
 
 jwt:
   secret: C5fxvkTIhV+zO+dUJHhzE48Pu5MOqjbC/pFO0L3XRbXfWC6P2+UX+slNwXWXXVm3

@@ -5,6 +5,7 @@ import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.service.auth.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +21,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<CommandResponse> signup(@RequestBody SignUpRequest request) {
+    public ResponseEntity<CommandResponse> signup(@Valid @RequestBody SignUpRequest request) {
         CommandResponse response = authService.register(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
