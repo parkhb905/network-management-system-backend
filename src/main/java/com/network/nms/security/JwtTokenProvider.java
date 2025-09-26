@@ -18,23 +18,43 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
-    private long validityInMs;
+    @Value("${jwt.access-expiration}")
+    private long accessTokenValidityInMs;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenValidityInMs;
 
     /**
-     * 토큰 생성
+     * 액세스 토큰 생성
      * @param authentication
      * @return
      */
-    public String generateToken(String username) {
+    public String generateAccessToken(String username) {
         Date now = new Date();
-        Date expiryDt = new Date(now.getTime() + validityInMs);
+        Date expiryDt = new Date(now.getTime() + accessTokenValidityInMs);
 
         return Jwts.builder()
                 .setSubject(username)                           // sub
                 .setIssuedAt(now)                               // iat
                 .setExpiration(expiryDt)                        // exp
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 서명 
+                .compact();
+    }
+
+    /**
+     * 리프레시 토큰 생성
+     * @param authentication
+     * @return
+     */
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+        Date expiryDt = new Date(now.getTime() + refreshTokenValidityInMs);
+
+        return Jwts.builder()
+                .setSubject(username)                           // sub
+                .setIssuedAt(now)                               // iat
+                .setExpiration(expiryDt)                        // exp
+                .signWith(SignatureAlgorithm.HS256, secretKey)  // 서명
                 .compact();
     }
 
@@ -73,6 +93,12 @@ public class JwtTokenProvider {
         }
     }
 
+    /**
+     * 토큰 유효성 검증
+     * @param token
+     * @param userDetails
+     * @return
+     */
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

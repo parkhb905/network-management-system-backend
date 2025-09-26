@@ -7,7 +7,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginResponse {
 
-    /** JWT 토큰 (성공 시에만 값 있음) **/
-    private String token;
+    /** Access Token **/
+    private String accessToken;
+
+    /** Refresh Token **/
+    private String refreshToken;
+
+    /** 아이디 **/
+    private String username;
 
 }

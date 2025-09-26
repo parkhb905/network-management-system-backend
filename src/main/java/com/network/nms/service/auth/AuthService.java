@@ -5,12 +5,15 @@ import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;
 import com.network.nms.dto.common.CommandResponse;
+import com.network.nms.dto.user.UserResponse;
 import com.network.nms.exception.CustomException;
 import com.network.nms.exception.ErrorCode;
 import com.network.nms.mapper.user.UserMapper;
 import com.network.nms.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,7 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
     /**
      * 회원가입
@@ -61,8 +65,35 @@ public class AuthService {
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new CustomException(ErrorCode.AUTH_INVALID_PASSWORD); // encode() 값 달라질 수 있으므로 matches()로 비교.
 
         // 로그인 성공 -> JWT 발급
-        String token = jwtTokenProvider.generateToken(user.getUsername());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
 
-        return new LoginResponse(token);
+        return new LoginResponse(accessToken, refreshToken, user.getUsername());
     }
+
+    public LoginResponse refresh(String refreshToken) {
+        // refreshToken에서 username 추출
+        String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
+
+        // userDetails 조회
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        // 토큰 유효성 검증
+        if(!jwtTokenProvider.validateToken(refreshToken, userDetails)) throw new RuntimeException("Invalid refresh token");
+
+        // 새 accessToken 발급
+        String newAccessToken = jwtTokenProvider.generateAccessToken(username);
+
+        return new LoginResponse(
+                newAccessToken,
+                refreshToken,
+                username
+        );
+    }
+
+    public UserResponse getMyInfo(String username) {
+        User user = userMapper.findByUsername(username);
+        return UserResponse.from(user);
+    }
+
 }

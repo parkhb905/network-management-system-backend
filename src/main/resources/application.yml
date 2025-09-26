@@ -37,4 +37,5 @@ mybatis:
 
 jwt:
   secret: C5fxvkTIhV+zO+dUJHhzE48Pu5MOqjbC/pFO0L3XRbXfWC6P2+UX+slNwXWXXVm3
-  expiration: 3600000 # 1시간
+  access-expiration: 3600000 # 1시간
+  refresh-expiration: 604800000 # 7일
