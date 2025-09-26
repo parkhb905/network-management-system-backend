@@ -3,6 +3,7 @@ package com.network.nms.controller.auth;
 import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;
+import com.network.nms.dto.auth.TokenResponse;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UserResponse;
 import com.network.nms.service.auth.AuthService;
@@ -47,7 +48,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refresh(@RequestBody String refreshToken) {
+    public ResponseEntity<TokenResponse> refresh(@RequestBody String refreshToken) {
         return ResponseEntity.ok(authService.refresh(refreshToken));
     }
 

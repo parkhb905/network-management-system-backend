@@ -4,6 +4,7 @@ import com.network.nms.domain.User;
 import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;
+import com.network.nms.dto.auth.TokenResponse;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UserResponse;
 import com.network.nms.exception.CustomException;
@@ -68,10 +69,10 @@ public class AuthService {
         String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
 
-        return new LoginResponse(accessToken, refreshToken, user.getUsername());
+        return new LoginResponse(accessToken, refreshToken, user.getUsername(), user.getEmail());
     }
 
-    public LoginResponse refresh(String refreshToken) {
+    public TokenResponse refresh(String refreshToken) {
         // refreshToken에서 username 추출
         String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
 
@@ -84,10 +85,9 @@ public class AuthService {
         // 새 accessToken 발급
         String newAccessToken = jwtTokenProvider.generateAccessToken(username);
 
-        return new LoginResponse(
+        return new TokenResponse(
                 newAccessToken,
-                refreshToken,
-                username
+                refreshToken
         );
     }
 
