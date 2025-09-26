@@ -4,7 +4,7 @@ spring:
       enabled: ALWAYS # 콘솔 출력에 ANSI 색상 코드 사용.
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3307/nms_db
+    url: jdbc:mariadb://localhost:3306/nms_db
     username: nms_user
     password: nms_user
   servlet:
