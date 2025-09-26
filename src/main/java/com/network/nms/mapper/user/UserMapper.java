@@ -12,4 +12,10 @@ public interface UserMapper {
     /** 로그인 **/
     User findByUsername(String username);
 
+    /** 회원정보 수정 **/
+    int updateUser(User user);
+
+    /** 회원탈퇴 **/
+    int deleteByUserName(String username);
+
 }

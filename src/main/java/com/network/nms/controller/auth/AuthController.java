@@ -19,23 +19,43 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * 회원가입
+     * @param request
+     * @return
+     */
     @PostMapping("/signup")
     public ResponseEntity<CommandResponse> signup(@Valid @RequestBody SignUpRequest request) {
         CommandResponse response = authService.register(request);
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 로그인
+     * @param request
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse loginResponse = authService.login(request);
         return ResponseEntity.ok(loginResponse);
     }
 
+    /**
+     * accessToken 재발급
+     * @param refreshToken
+     * @return
+     */
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refresh(@RequestBody String refreshToken) {
         return ResponseEntity.ok(authService.refresh(refreshToken));
     }
 
+    /**
+     * 사용자 정보 갱신
+     * @param authentication
+     * @return
+     */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMyInfo(Authentication authentication) {
         String username = authentication.getName();

@@ -18,7 +18,7 @@ public enum ErrorCode {
     USERNAME_ALREADY_EXISTS(2001, "이미 사용 중인 아이디입니다.", HttpStatus.CONFLICT),
 
     /* DB */
-    DB_INSERT_FAILED(9001, "데이터 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    DB_FAILED(9001, "DB 문제로 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
     /* 서버 */
     INTERNAL_SERVER_ERROR(9999, "서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);

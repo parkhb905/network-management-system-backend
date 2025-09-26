@@ -43,7 +43,7 @@ public class AuthService {
             int result = userMapper.insertUser(user);
 
             if (result != 1) {
-                throw new CustomException(ErrorCode.DB_INSERT_FAILED);
+                throw new CustomException(ErrorCode.DB_FAILED);
             }
 
             return new CommandResponse(true, result);
