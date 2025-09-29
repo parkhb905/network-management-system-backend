@@ -11,11 +11,13 @@
             , email
             , password
             , role
+            , created_at
         ) VALUES (
             #{username}
             , #{email}
             , #{password}
             , #{role}
+            , NOW()
         )
     </insert>
 
@@ -30,19 +32,31 @@
             `user`
         WHERE
             username = #{username}
+        AND
+            deleted = FALSE
     </select>
 
     <update id="updateUser" parameterType="com.network.nms.domain.User">
         UPDATE
             `user`
-        <set>
+        SET
+            updated_at = NOW()
             <if test="email != null">
-                email = #{email},
+                , email = #{email}
             </if>
             <if test="password != null">
-                password = #{password},
+                , password = #{password}
             </if>
-        </set>
+        WHERE
+            username = #{username}
+    </update>
+
+    <update id="deleteByUserName" parameterType="com.network.nms.domain.User">
+        UPDATE
+            `user`
+        SET
+            deleted = TRUE
+            , deleted_at = NOW()
         WHERE
             username = #{username}
     </update>
