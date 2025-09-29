@@ -1,9 +1,11 @@
-package com.network.nms.domain;
+package com.network.nms.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -23,13 +25,19 @@ public class User {
     /** 비밀번호 **/
     private String password;
 
-    /** 생성일자 **/
+    /** 생성 일시 **/
     private String createdAt;
 
-    /** 수정일자 **/
+    /** 수정 일시 **/
     private String updatedAt;
 
     /** 권한 **/
     private String role;
 
+    /** 삭제 여부 **/
+    private Boolean deleted;
+
+    /** 삭제 일시 **/
+    private LocalDateTime deletedAt;
+    
 }

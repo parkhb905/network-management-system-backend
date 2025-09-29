@@ -1,6 +1,6 @@
 package com.network.nms.security;
 
-import com.network.nms.domain.User;
+import com.network.nms.domain.user.User;
 import com.network.nms.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
 package com.network.nms.mapper.user;
 
-import com.network.nms.domain.User;
+import com.network.nms.domain.user.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

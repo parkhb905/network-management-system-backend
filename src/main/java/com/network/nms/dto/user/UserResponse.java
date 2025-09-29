@@ -1,6 +1,6 @@
 package com.network.nms.dto.user;
 
-import com.network.nms.domain.User;
+import com.network.nms.domain.user.User;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.network.nms.service.user;
 
-import com.network.nms.domain.User;
+import com.network.nms.domain.user.User;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UpdateUserRequest;
 import com.network.nms.exception.CustomException;
