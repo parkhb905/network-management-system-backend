@@ -1,4 +1,4 @@
-package com.network.nms.domain;
+package com.network.nms.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

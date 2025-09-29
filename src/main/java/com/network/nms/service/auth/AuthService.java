@@ -1,6 +1,6 @@
 package com.network.nms.service.auth;
 
-import com.network.nms.domain.User;
+import com.network.nms.domain.user.User;
 import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
 import com.network.nms.dto.auth.SignUpRequest;

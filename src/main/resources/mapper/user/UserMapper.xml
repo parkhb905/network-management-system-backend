@@ -5,7 +5,7 @@
 
 <mapper namespace="com.network.nms.mapper.user.UserMapper">
 
-    <insert id="insertUser" parameterType="com.network.nms.domain.User">
+    <insert id="insertUser" parameterType="com.network.nms.domain.user.User">
         INSERT INTO `user` (
             username
             , email
@@ -21,7 +21,7 @@
         )
     </insert>
 
-    <select id="findByUsername" parameterType="string" resultType="com.network.nms.domain.User">
+    <select id="findByUsername" parameterType="string" resultType="com.network.nms.domain.user.User">
         SELECT
             id
             , username
@@ -36,7 +36,7 @@
             deleted = FALSE
     </select>
 
-    <update id="updateUser" parameterType="com.network.nms.domain.User">
+    <update id="updateUser" parameterType="com.network.nms.domain.user.User">
         UPDATE
             `user`
         SET
@@ -51,7 +51,7 @@
             username = #{username}
     </update>
 
-    <update id="deleteByUserName" parameterType="com.network.nms.domain.User">
+    <update id="deleteByUserName" parameterType="com.network.nms.domain.user.User">
         UPDATE
             `user`
         SET
