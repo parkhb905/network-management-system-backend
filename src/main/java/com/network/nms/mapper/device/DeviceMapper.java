@@ -16,7 +16,13 @@ public interface DeviceMapper {
     /** 장비 총 개수 조회 **/
     long countDevices();
 
+    /** 장비 상세 조회 **/
+    DeviceResponse findDevice(@Param("deviceId") Long deviceId);
+    
     /** 장비 등록 **/
     int insertDevice(Device device);
+
+    /** 장비 수정 **/
+    int updateDevice(Device device);
 
 }

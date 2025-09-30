@@ -26,6 +26,9 @@ public class Device {
     /** 생성자 아이디 **/
     private Long createdBy;
 
+    /** 생성자 아이디 **/
+    private Long updatedBy;
+
     /** 생성 일시 **/
     private LocalDateTime createdAt;
 
