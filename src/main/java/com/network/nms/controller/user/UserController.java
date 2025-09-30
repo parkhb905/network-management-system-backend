@@ -3,6 +3,7 @@ package com.network.nms.controller.user;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UpdateUserRequest;
 import com.network.nms.service.user.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/me")
-    public ResponseEntity<CommandResponse> updateUser(Authentication authentication, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<CommandResponse> updateUser(Authentication authentication, @Valid  @RequestBody UpdateUserRequest request) {
         String username = authentication.getName();
         CommandResponse response = userService.updateUser(username, request);
         return ResponseEntity.ok(response);

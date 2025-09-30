@@ -71,4 +71,20 @@
             dv.deleted = FALSE
     </select>
 
+    <insert id="insertDevice" parameterType="com.network.nms.domain.device.Device">
+        INSERT INTO device (
+            device_name
+            , device_type_id
+            , vendor_id
+            , created_by
+            , created_at
+        ) VALUES (
+            #{deviceName}
+            , #{deviceTypeId}
+            , #{vendorId}
+            , #{createdBy}
+            , NOW()
+        )
+    </insert>
+
 </mapper>

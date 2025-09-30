@@ -1,14 +1,16 @@
 package com.network.nms.controller.device;
 
+import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.common.PagedQueryResponse;
+import com.network.nms.dto.device.DeviceRequest;
 import com.network.nms.dto.device.DeviceResponse;
+import com.network.nms.security.CustomUserDetails;
 import com.network.nms.service.device.DeviceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -33,5 +35,17 @@ public class DeviceController {
 //    public ResponseEntity<QueryResponse<DeviceResponse>> getDevice() {
 //
 //    }
+
+    /**
+     * 장비 등록
+     * @param request
+     * @param user
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<CommandResponse> createDevice(@Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+        CommandResponse response = deviceService.createDevice(request, user.getId());
+        return ResponseEntity.ok(response);
+    }
 
 }
