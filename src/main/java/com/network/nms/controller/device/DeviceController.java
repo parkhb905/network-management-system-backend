@@ -2,6 +2,7 @@ package com.network.nms.controller.device;
 
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.common.PagedQueryResponse;
+import com.network.nms.dto.common.QueryResponse;
 import com.network.nms.dto.device.DeviceRequest;
 import com.network.nms.dto.device.DeviceResponse;
 import com.network.nms.security.CustomUserDetails;
@@ -31,10 +32,16 @@ public class DeviceController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<QueryResponse<DeviceResponse>> getDevice() {
-//
-//    }
+    /**
+     * 장비 상세 조회
+     * @param deviceId
+     * @return
+     */
+    @GetMapping("/{deviceId}")
+    public ResponseEntity<QueryResponse<DeviceResponse>> getDeviceById(@PathVariable Long deviceId) {
+        QueryResponse response = deviceService.getDeviceById(deviceId);
+        return ResponseEntity.ok(response);
+    }
 
     /**
      * 장비 등록
@@ -45,6 +52,18 @@ public class DeviceController {
     @PostMapping
     public ResponseEntity<CommandResponse> createDevice(@Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
         CommandResponse response = deviceService.createDevice(request, user.getId());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 장비 수정
+     * @param request
+     * @param user
+     * @return
+     */
+    @PutMapping("/{deviceId}")
+    public ResponseEntity<CommandResponse> updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+        CommandResponse response = deviceService.updateDevice(deviceId, request, user.getId());
         return ResponseEntity.ok(response);
     }
 

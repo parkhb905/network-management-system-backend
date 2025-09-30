@@ -4,6 +4,7 @@ import com.network.nms.domain.device.Device;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.common.PageResponse;
 import com.network.nms.dto.common.PagedQueryResponse;
+import com.network.nms.dto.common.QueryResponse;
 import com.network.nms.dto.device.DeviceRequest;
 import com.network.nms.dto.device.DeviceResponse;
 import com.network.nms.exception.CustomException;
@@ -39,6 +40,16 @@ public class DeviceService {
     }
 
     /**
+     * 장비 상세 조회
+     * @param deviceId
+     * @return
+     */
+    public QueryResponse<DeviceResponse> getDeviceById(Long deviceId) {
+        DeviceResponse response = deviceMapper.findDevice(deviceId);
+        return new QueryResponse<>(true, response);
+    }
+
+    /**
      * 장비 등록
      * @param request
      * @return
@@ -51,6 +62,21 @@ public class DeviceService {
                 .createdBy(id)
                 .build();
         int result = deviceMapper.insertDevice(device);
+        if(result != 1) {
+            throw new CustomException(ErrorCode.DB_FAILED);
+        }
+        return new CommandResponse(true, result);
+    }
+
+    public CommandResponse updateDevice(Long deviceId, DeviceRequest request, Long id) {
+        Device device = Device.builder()
+                .deviceId(deviceId)
+                .deviceName(request.getDeviceName())
+                .deviceTypeId(request.getDeviceTypeId())
+                .vendorId(request.getVendorId())
+                .createdBy(id)
+                .build();
+        int result = deviceMapper.updateDevice(device);
         if(result != 1) {
             throw new CustomException(ErrorCode.DB_FAILED);
         }

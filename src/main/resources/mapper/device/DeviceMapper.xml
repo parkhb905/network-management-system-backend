@@ -11,7 +11,6 @@
         FROM
         (
             SELECT
-    <!--        카멜케이스 자동 적용되는 지 확인 -->
                 #{totalElements} - ROW_NUMBER() OVER (ORDER BY dv.created_at DESC) + 1 AS rownum
                 , dv.device_id AS deviceId
                 , dv.device_name AS deviceName
@@ -25,10 +24,14 @@
                 code dv_cd
             ON
                 dv.device_type_id = dv_cd.code_id
+            AND
+                dv_cd.deleted = FALSE
             INNER JOIN
                 code vd_cd
             ON
                 dv.vendor_id = vd_cd.code_id
+            AND
+                vd_cd.deleted = FALSE
             INNER JOIN
                 `user` usr
             ON
@@ -57,10 +60,14 @@
             code dv_cd
         ON
             dv.device_type_id = dv_cd.code_id
+        AND
+            dv_cd.deleted = FALSE
         INNER JOIN
             code vd_cd
         ON
             dv.vendor_id = vd_cd.code_id
+        AND
+            vd_cd.deleted = FALSE
         INNER JOIN
             `user` usr
         ON
@@ -69,6 +76,42 @@
             usr.deleted = FALSE
         WHERE
             dv.deleted = FALSE
+    </select>
+
+    <select id="findDevice" resultType="com.network.nms.dto.device.DeviceResponse">
+        SELECT
+            dv.device_id AS deviceId
+            , dv.device_name AS deviceName
+            , dv_cd.code_id AS deviceTypeId
+            , dv_cd.code_name AS deviceTypeName
+            , vd_cd.code_id AS vendorId
+            , vd_cd.code_name AS vendorName
+            , usr.username AS createdByName
+            , dv.created_at AS createdAt
+        FROM
+            device dv
+        INNER JOIN
+            code dv_cd
+        ON
+            dv.device_type_id = dv_cd.code_id
+        AND
+            dv_cd.deleted = FALSE
+        INNER JOIN
+            code vd_cd
+        ON
+            dv.vendor_id = vd_cd.code_id
+        AND
+            vd_cd.deleted = FALSE
+        INNER JOIN
+            `user` usr
+        ON
+            dv.created_by = usr.id
+        AND
+            usr.deleted = FALSE
+        WHERE
+            dv.deleted = FALSE
+        AND
+            dv.device_id = #{deviceId}
     </select>
 
     <insert id="insertDevice" parameterType="com.network.nms.domain.device.Device">
@@ -86,5 +129,18 @@
             , NOW()
         )
     </insert>
+
+    <update id="updateDevice" parameterType="com.network.nms.domain.device.Device">
+        UPDATE
+            device
+        SET
+            device_name = #{deviceName}
+            , device_type_id = #{deviceTypeId}
+            , vendor_id = #{vendorId}
+            , updated_by = #{updatedBy}
+            , updated_at = NOW()
+        WHERE
+            device_id = #{deviceId}
+    </update>
 
 </mapper>
