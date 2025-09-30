@@ -1,8 +1,13 @@
 package com.network.nms.service.device;
 
+import com.network.nms.domain.device.Device;
+import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.common.PageResponse;
 import com.network.nms.dto.common.PagedQueryResponse;
+import com.network.nms.dto.device.DeviceRequest;
 import com.network.nms.dto.device.DeviceResponse;
+import com.network.nms.exception.CustomException;
+import com.network.nms.exception.ErrorCode;
 import com.network.nms.mapper.device.DeviceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,25 @@ public class DeviceService {
 
         PageResponse pageInfo = new PageResponse(page, size, totalElements, totalPages);
         return new PagedQueryResponse<>(true, content, pageInfo);
+    }
+
+    /**
+     * 장비 등록
+     * @param request
+     * @return
+     */
+    public CommandResponse createDevice(DeviceRequest request, Long id) {
+        Device device = Device.builder()
+                .deviceName(request.getDeviceName())
+                .deviceTypeId(request.getDeviceTypeId())
+                .vendorId(request.getVendorId())
+                .createdBy(id)
+                .build();
+        int result = deviceMapper.insertDevice(device);
+        if(result != 1) {
+            throw new CustomException(ErrorCode.DB_FAILED);
+        }
+        return new CommandResponse(true, result);
     }
 
 }

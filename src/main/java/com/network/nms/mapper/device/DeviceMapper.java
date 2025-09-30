@@ -1,5 +1,6 @@
 package com.network.nms.mapper.device;
 
+import com.network.nms.domain.device.Device;
 import com.network.nms.dto.device.DeviceResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,5 +15,8 @@ public interface DeviceMapper {
 
     /** 장비 총 개수 조회 **/
     long countDevices();
+
+    /** 장비 등록 **/
+    int insertDevice(Device device);
 
 }

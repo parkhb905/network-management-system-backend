@@ -20,10 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService { // DB 조�
         if (user == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다. (아이디: " + username + ")");
         }
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .roles(user.getRole())
-                .build();
+        return new CustomUserDetails(user);
     }
 }
