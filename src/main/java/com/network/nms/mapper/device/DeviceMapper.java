@@ -25,4 +25,7 @@ public interface DeviceMapper {
     /** 장비 수정 **/
     int updateDevice(Device device);
 
+    /** 장비 삭제 **/
+    int deleteDevices(@Param("selectDeviceIds") List<Long> selectDeviceIds);
+
 }

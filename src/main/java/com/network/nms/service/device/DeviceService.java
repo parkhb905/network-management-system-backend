@@ -68,6 +68,13 @@ public class DeviceService {
         return new CommandResponse(true, result);
     }
 
+    /**
+     * 장비 수정
+     * @param deviceId
+     * @param request
+     * @param id
+     * @return
+     */
     public CommandResponse updateDevice(Long deviceId, DeviceRequest request, Long id) {
         Device device = Device.builder()
                 .deviceId(deviceId)
@@ -80,6 +87,16 @@ public class DeviceService {
         if(result != 1) {
             throw new CustomException(ErrorCode.DB_FAILED);
         }
+        return new CommandResponse(true, result);
+    }
+
+    /**
+     * 장비 삭제
+     * @param selectDeviceIds
+     * @return
+     */
+    public CommandResponse deleteDevices(List<Long> selectDeviceIds) {
+        int result = deviceMapper.deleteDevices(selectDeviceIds);
         return new CommandResponse(true, result);
     }
 
