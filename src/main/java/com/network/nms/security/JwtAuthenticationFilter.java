@@ -1,5 +1,7 @@
 package com.network.nms.security;
 
+import com.network.nms.mapper.log.UserAccessLogMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +19,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
+    private final UserAccessLogMapper userAccessLogMapper;
+
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
-                                   UserDetailsService userDetailsService) {
+                                   UserDetailsService userDetailsService,
+                                   UserAccessLogMapper userAccessLogMapper) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
+        this.userAccessLogMapper = userAccessLogMapper;
     }
 
     @Override
@@ -49,6 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
+            } catch(ExpiredJwtException e) {
+                String username = e.getClaims().getSubject();
+                userAccessLogMapper.updateLogoutAt(username);
             } catch (Exception e) {
                 logger.warn("JWT validation failed: " + e.getMessage());
             }

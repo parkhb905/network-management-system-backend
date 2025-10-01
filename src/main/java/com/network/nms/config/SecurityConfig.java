@@ -1,5 +1,6 @@
 package com.network.nms.config;
 
+import com.network.nms.mapper.log.UserAccessLogMapper;
 import com.network.nms.security.JwtAuthenticationFilter;
 import com.network.nms.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,13 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
+    private final UserAccessLogMapper userAccessLogMapper;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, userAccessLogMapper);
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -36,7 +44,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 // JWT 필터 추가
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

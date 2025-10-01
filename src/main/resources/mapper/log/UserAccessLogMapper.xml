@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.network.nms.mapper.log.UserAccessLogMapper">
+
+    <insert id="insertLoginLog" parameterType="com.network.nms.domain.log.UserAccessLog">
+        INSERT INTO user_access_log (
+            username
+            , result
+            , ip
+            , attempt_at
+            , login_at
+        ) VALUES (
+            #{username}
+            , #{result}
+            , #{ip}
+            , NOW()
+            <choose>
+                <when test="result = 'SUCCESS'">
+                    , NOW()
+                </when>
+                <otherwise>
+                    , NULL
+                </otherwise>
+            </choose>
+        )
+    </insert>
+
+    <update id="updateLogoutAt">
+        UPDATE
+            user_access_log
+        SET
+            logout_at = NOW()
+        WHERE
+            username = #{username}
+        AND
+            reuslt = 'SUCCESS'
+        ORDER BY
+            login_at DESC
+        LIMIT 1
+    </update>
+
+</mapper>
