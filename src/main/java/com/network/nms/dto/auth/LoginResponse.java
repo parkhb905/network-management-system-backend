@@ -19,4 +19,7 @@ public class LoginResponse {
     /** 이메일 **/
     private String email;
 
+    /** 권한 **/
+    private String role;
+
 }

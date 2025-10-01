@@ -1,5 +1,6 @@
 package com.network.nms.service.auth;
 
+import com.network.nms.domain.log.UserAccessLog;
 import com.network.nms.domain.user.User;
 import com.network.nms.dto.auth.LoginRequest;
 import com.network.nms.dto.auth.LoginResponse;
@@ -9,8 +10,10 @@ import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UserResponse;
 import com.network.nms.exception.CustomException;
 import com.network.nms.exception.ErrorCode;
+import com.network.nms.mapper.log.UserAccessLogMapper;
 import com.network.nms.mapper.user.UserMapper;
 import com.network.nms.security.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +29,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+
+    private final UserAccessLogMapper userAccessLogMapper;
+    private final HttpServletRequest httpServletRequest;
 
     /**
      * 회원가입
@@ -60,16 +66,44 @@ public class AuthService {
      * @return
      */
     public LoginResponse login(LoginRequest request) {
-        User user = userMapper.findByUsername(request.getUsername());
+        String ip = httpServletRequest.getRemoteAddr();
 
-        if(user == null) throw new CustomException(ErrorCode.AUTH_USER_NOT_FOUND);
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new CustomException(ErrorCode.AUTH_INVALID_PASSWORD); // encode() 값 달라질 수 있으므로 matches()로 비교.
+        try {
+            User user = userMapper.findByUsername(request.getUsername());
 
-        // 로그인 성공 -> JWT 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+            if(user == null) throw new CustomException(ErrorCode.AUTH_USER_NOT_FOUND);
+            // encode() 값 달라질 수 있으므로 matches()로 비교.
+            if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                UserAccessLog userAccessLog = UserAccessLog.builder()
+                        .username(request.getUsername())
+                        .result("FAIL")
+                        .ip(ip)
+                        .build();
+                userAccessLogMapper.insertLoginLog(userAccessLog);
+                throw new CustomException(ErrorCode.AUTH_INVALID_PASSWORD);
+            }
 
-        return new LoginResponse(accessToken, refreshToken, user.getUsername(), user.getEmail());
+            // 로그인 성공 -> JWT 발급
+            UserAccessLog userAccessLog = UserAccessLog.builder()
+                    .username(request.getUsername())
+                    .result("SUCCESS")
+                    .ip(ip)
+                    .build();
+            userAccessLogMapper.insertLoginLog(userAccessLog);
+
+            String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
+            String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+
+            return new LoginResponse(accessToken, refreshToken, user.getUsername(), user.getEmail(), user.getRole());
+        } catch(Exception e) {
+            UserAccessLog userAccessLog = UserAccessLog.builder()
+                    .username(request.getUsername())
+                    .result("FAIL")
+                    .ip(ip)
+                    .build();
+            userAccessLogMapper.insertLoginLog(userAccessLog);
+            throw e;
+        }
     }
 
     public TokenResponse refresh(String refreshToken) {
