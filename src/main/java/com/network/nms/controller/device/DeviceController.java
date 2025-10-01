@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/devices")
 @RequiredArgsConstructor
@@ -64,6 +66,17 @@ public class DeviceController {
     @PutMapping("/{deviceId}")
     public ResponseEntity<CommandResponse> updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
         CommandResponse response = deviceService.updateDevice(deviceId, request, user.getId());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 장비 삭제
+     * @param selectDeviceIds
+     * @return
+     */
+    @DeleteMapping
+    public ResponseEntity<CommandResponse> deleteDevices(@RequestBody List<Long> selectDeviceIds) {
+        CommandResponse response = deviceService.deleteDevices(selectDeviceIds);
         return ResponseEntity.ok(response);
     }
 

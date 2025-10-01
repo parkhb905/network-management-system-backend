@@ -143,4 +143,14 @@
             device_id = #{deviceId}
     </update>
 
+    <delete id="deleteDevices">
+        DELETE FROM
+            device
+        WHERE
+            device_id IN
+            <foreach item="deviceId" collection="selectDeviceIds" open="(" separator="," close=")">
+                #{deviceId}
+            </foreach>
+    </delete>
+
 </mapper>
