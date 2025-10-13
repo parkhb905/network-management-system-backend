@@ -153,4 +153,14 @@
             </foreach>
     </delete>
 
+    <select id="findAllActiveDevices" resultType="com.network.nms.domain.device.Device">
+        SELECT
+            device_id
+            , device_name
+        FROM
+            device
+        WHERE
+            deleted = FALSE
+    </select>
+
 </mapper>
