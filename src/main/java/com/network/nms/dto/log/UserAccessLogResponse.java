@@ -1,22 +1,16 @@
-package com.network.nms.domain.log;
+package com.network.nms.dto.log;
 
-import lombok.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserAccessLog {
+@Data
+public class UserAccessLogResponse {
 
-    /** key **/
-    private Long user_access_log_id;
+    /** 순번 **/
+    private Long rownum;
 
-    /** 로그인 시도 사용자 key **/
-    private Long userId;
-
-    /** 로그인 시도 사용자 아이디 **/
+    /** 로그인 시도 아이디 **/
     private String username;
 
     /** 로그인 시도 결과 (SUCCESS / FAIL) **/

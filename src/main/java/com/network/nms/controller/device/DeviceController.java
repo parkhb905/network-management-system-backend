@@ -52,8 +52,8 @@ public class DeviceController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<CommandResponse> createDevice(@Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
-        CommandResponse response = deviceService.createDevice(request, user.getId());
+    public ResponseEntity<CommandResponse> createDevice(@Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        CommandResponse response = deviceService.createDevice(request, customUserDetails.getUserId());
         return ResponseEntity.ok(response);
     }
 
@@ -64,8 +64,8 @@ public class DeviceController {
      * @return
      */
     @PutMapping("/{deviceId}")
-    public ResponseEntity<CommandResponse> updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails user) {
-        CommandResponse response = deviceService.updateDevice(deviceId, request, user.getId());
+    public ResponseEntity<CommandResponse> updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        CommandResponse response = deviceService.updateDevice(deviceId, request, customUserDetails.getUserId());
         return ResponseEntity.ok(response);
     }
 

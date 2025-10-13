@@ -7,18 +7,20 @@
 
     <insert id="insertLoginLog" parameterType="com.network.nms.domain.log.UserAccessLog">
         INSERT INTO user_access_log (
-            username
+            user_id
+            , username
             , result
             , ip
             , attempt_at
             , login_at
         ) VALUES (
-            #{username}
+            #{userId}
+            , #{username}
             , #{result}
             , #{ip}
             , NOW()
             <choose>
-                <when test="result = 'SUCCESS'">
+                <when test="result == 'SUCCESS'">
                     , NOW()
                 </when>
                 <otherwise>
@@ -34,12 +36,57 @@
         SET
             logout_at = NOW()
         WHERE
-            username = #{username}
+            user_id = #{userId}
         AND
-            reuslt = 'SUCCESS'
+            result = 'SUCCESS'
         ORDER BY
             login_at DESC
         LIMIT 1
     </update>
+
+    <select id="findUserAccessLogs" resultType="com.network.nms.dto.log.UserAccessLogResponse">
+        SELECT
+            *
+        FROM
+        (
+            SELECT
+                #{totalElements} - ROW_NUMBER() OVER (ORDER BY log.attempt_at DESC) + 1 AS rownum
+                , log.username
+                , log.result
+                , log.ip
+                , log.attempt_at
+                , log.login_at
+                , log.logout_at
+            FROM
+                user_access_log log
+            INNER JOIN
+                `user` usr
+            ON
+                log.user_id = usr.user_id
+            AND
+                usr.deleted = FALSE
+            ORDER BY
+                log.attempt_at DESC
+            LIMIT
+                #{size}
+            OFFSET
+                #{offset}
+        ) pagingTbl
+        ORDER BY
+            pagingTbl.rownum DESC;
+    </select>
+
+    <select id="countUserAccessLogs" resultType="long">
+        SELECT
+            COUNT(log.user_access_log_id)
+        FROM
+            user_access_log log
+        INNER JOIN
+            `user` usr
+        ON
+            log.user_id = usr.user_id
+        AND
+            usr.deleted = FALSE
+    </select>
 
 </mapper>
