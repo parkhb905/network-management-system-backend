@@ -6,11 +6,14 @@ import com.network.nms.dto.auth.SignUpRequest;
 import com.network.nms.dto.auth.TokenResponse;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.user.UserResponse;
+import com.network.nms.security.CustomUserDetails;
 import com.network.nms.service.auth.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,9 +40,20 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse loginResponse = authService.login(request);
+    public ResponseEntity<LoginResponse> login(HttpServletRequest httpServletRequest, @Valid @RequestBody LoginRequest request) {
+        LoginResponse loginResponse = authService.login(httpServletRequest, request);
         return ResponseEntity.ok(loginResponse);
+    }
+
+    /**
+     * 로그아웃
+     * @param customUserDetails
+     * @return
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<CommandResponse> logout(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        CommandResponse response = authService.logout(customUserDetails.getUserId());
+        return ResponseEntity.ok(response);
     }
 
     /**

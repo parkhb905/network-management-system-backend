@@ -13,7 +13,7 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     /** key **/
-    private final Long id;
+    private final Long userId;
 
     /** 아이디 **/
     private final String username;
@@ -25,7 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private final String role;
 
     public CustomUserDetails(User user) {
-        this.id = user.getId();
+        this.userId = user.getUserId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.role = user.getRole();

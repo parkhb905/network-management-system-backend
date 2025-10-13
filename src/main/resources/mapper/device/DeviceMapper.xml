@@ -35,7 +35,7 @@
             INNER JOIN
                 `user` usr
             ON
-                dv.created_by = usr.id
+                dv.created_by = usr.user_id
             AND
                 usr.deleted = FALSE
             WHERE
@@ -71,7 +71,7 @@
         INNER JOIN
             `user` usr
         ON
-            dv.created_by = usr.id
+            dv.created_by = usr.user_id
         AND
             usr.deleted = FALSE
         WHERE
@@ -105,7 +105,7 @@
         INNER JOIN
             `user` usr
         ON
-            dv.created_by = usr.id
+            dv.created_by = usr.user_id
         AND
             usr.deleted = FALSE
         WHERE

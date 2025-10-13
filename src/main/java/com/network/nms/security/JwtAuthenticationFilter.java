@@ -57,7 +57,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } catch(ExpiredJwtException e) {
                 String username = e.getClaims().getSubject();
-                userAccessLogMapper.updateLogoutAt(username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                if(userDetails instanceof CustomUserDetails customUserDetails) {
+                    userAccessLogMapper.updateLogoutAt(customUserDetails.getUserId());
+                }
+
             } catch (Exception e) {
                 logger.warn("JWT validation failed: " + e.getMessage());
             }
@@ -65,4 +70,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 }
