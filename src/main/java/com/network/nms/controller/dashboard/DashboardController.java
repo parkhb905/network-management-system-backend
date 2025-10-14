@@ -1,6 +1,7 @@
 package com.network.nms.controller.dashboard;
 
 import com.network.nms.dto.common.QueryResponse;
+import com.network.nms.dto.dashboard.DeviceCpuUsageResponse;
 import com.network.nms.service.dashboard.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,26 @@ public class DashboardController {
     @GetMapping("/devices/type")
     public ResponseEntity<QueryResponse<List<Map<String, Object>>>> getDeviceCountByType() {
         QueryResponse response = dashboardService.getDeviceCountByType();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 제조사별 장비수
+     * @return
+     */
+    @GetMapping("/devices/vendor")
+    public ResponseEntity<QueryResponse<List<Map<String, Object>>>> getDeviceCountByVendor() {
+        QueryResponse response = dashboardService.getDeviceCountByVendor();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * CPU 사용률 TOP5
+     * @return
+     */
+    @GetMapping("/resource/cpu-top5")
+    public ResponseEntity<QueryResponse<List<DeviceCpuUsageResponse>>> getTop5CpuUsage() {
+        QueryResponse response = dashboardService.getTop5CpuUsage();
         return ResponseEntity.ok(response);
     }
 
