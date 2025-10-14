@@ -28,4 +28,7 @@ public interface DeviceMapper {
     /** 장비 삭제 **/
     int deleteDevices(@Param("selectDeviceIds") List<Long> selectDeviceIds);
 
+    /** 전체 장비 조회 **/
+    List<Device> findAllActiveDevices();
+
 }

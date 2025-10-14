@@ -1,11 +1,11 @@
 package com.network.nms;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@MapperScan("com.network.nms.mapper")
+@EnableScheduling
 public class NmsApplication {
 
 	public static void main(String[] args) {
