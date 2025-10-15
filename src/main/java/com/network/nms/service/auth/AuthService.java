@@ -110,14 +110,20 @@ public class AuthService {
      * @return
      */
     public TokenResponse refresh(String refreshToken) {
-        // refreshToken에서 username 추출
+        // 토큰에서 username 추출
         String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
-
-        // userDetails 조회
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        
+        // 사용자 존재 여부 검증
+        UserDetails userDetails;
+        try {
+            userDetails = userDetailsService.loadUserByUsername(username);
+        } catch (Exception e) {
+            // userDetailsService에서 UsernameNotFoundException 발생 시
+            throw new CustomException(ErrorCode.AUTH_USER_NOT_FOUND);
+        }
 
         // 토큰 유효성 검증
-        if(!jwtTokenProvider.validateToken(refreshToken, userDetails)) throw new RuntimeException("Invalid refresh token");
+        if(!jwtTokenProvider.validateTokenOnly(refreshToken)) throw new RuntimeException("Invalid refresh token");
 
         // 새 accessToken 발급
         String newAccessToken = jwtTokenProvider.generateAccessToken(username);
