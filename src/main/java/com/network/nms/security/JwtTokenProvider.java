@@ -1,9 +1,8 @@
 package com.network.nms.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.network.nms.exception.CustomException;
+import com.network.nms.exception.ErrorCode;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -99,9 +98,35 @@ public class JwtTokenProvider {
      * @param userDetails
      * @return
      */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUsernameFromToken(token);
+    public boolean validateToken(String token, String username, UserDetails userDetails) {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    /**
+     * Claim 파싱
+     * @param token
+     * @return
+     */
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    /**
+     * RefreshToken 전용 — DB 조회 없이 단순 유효성만 검증
+     */
+    public boolean validateTokenOnly(String token) {
+        try {
+            parseClaims(token); // 서명, 만료 등 검증
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(ErrorCode.AUTH_EXPIRED_TOKEN);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new CustomException(ErrorCode.AUTH_FORBIDDEN);
+        }
     }
 
 }
