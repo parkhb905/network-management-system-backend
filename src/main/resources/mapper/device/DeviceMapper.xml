@@ -6,10 +6,7 @@
 <mapper namespace="com.network.nms.mapper.device.DeviceMapper">
 
     <select id="findDevices" resultType="com.network.nms.dto.device.DeviceResponse">
-        SELECT
-            *
-        FROM
-        (
+
             SELECT
                 #{totalElements} - ROW_NUMBER() OVER (ORDER BY dv.created_at DESC) + 1 AS rownum
                 , dv.device_id AS deviceId
@@ -46,9 +43,7 @@
                 #{size}
             OFFSET
                 #{offset}
-        ) pagingTbl
-        ORDER BY
-            pagingTbl.rownum DESC;
+
     </select>
 
     <select id="countDevices" resultType="long">

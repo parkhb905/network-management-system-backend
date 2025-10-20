@@ -61,4 +61,31 @@
             username = #{username}
     </update>
 
+    <select id="findUsers" resultType="com.network.nms.dto.user.AdminUserResponse">
+            SELECT
+                #{totalElements} - ROW_NUMBER() OVER (ORDER BY created_at DESC) + 1 AS rownum
+                , user_id
+                , username
+                , created_at
+            FROM
+                `user`
+            WHERE
+                deleted = FALSE
+            ORDER BY
+                created_at DESC
+            LIMIT
+                #{size}
+            OFFSET
+                #{offset}
+    </select>
+
+    <select id="countUsers" resultType="long">
+        SELECT
+            COUNT(user_id)
+        FROM
+            `user`
+        WHERE
+            deleted = FALSE
+    </select>
+
 </mapper>
