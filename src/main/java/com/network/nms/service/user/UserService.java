@@ -2,7 +2,10 @@ package com.network.nms.service.user;
 
 import com.network.nms.domain.user.User;
 import com.network.nms.dto.common.CommandResponse;
+import com.network.nms.dto.common.PageResponse;
+import com.network.nms.dto.common.PagedQueryResponse;
 import com.network.nms.dto.user.UpdateUserRequest;
+import com.network.nms.dto.user.AdminUserResponse;
 import com.network.nms.exception.CustomException;
 import com.network.nms.exception.ErrorCode;
 import com.network.nms.mapper.user.UserMapper;
@@ -10,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +67,22 @@ public class UserService {
             throw new CustomException(ErrorCode.DB_FAILED);
         }
         return new CommandResponse(true, result);
+    }
+
+    /**
+     * 사용자 목록 조회
+     * @param page
+     * @param size
+     * @return
+     */
+    public PagedQueryResponse<AdminUserResponse> getUsers(int page, int size) {
+        int offset = (page - 1) * size;
+        long totalElements = userMapper.countUsers();
+        List<AdminUserResponse> content = userMapper.findUsers(offset, size, totalElements);
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        PageResponse pageInfo = new PageResponse(page, size, totalElements, totalPages);
+        return new PagedQueryResponse<>(true, content, pageInfo);
     }
 
 }
