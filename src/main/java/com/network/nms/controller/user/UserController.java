@@ -1,7 +1,7 @@
 package com.network.nms.controller.user;
 
 import com.network.nms.dto.common.CommandResponse;
-import com.network.nms.dto.user.UpdateUserRequest;
+import com.network.nms.dto.user.UpdateMyInfoRequest;
 import com.network.nms.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ public class UserController {
      * @return
      */
     @PutMapping("/me")
-    public ResponseEntity<CommandResponse> updateUser(Authentication authentication, @Valid  @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<CommandResponse> updateUser(Authentication authentication, @Valid @RequestBody UpdateMyInfoRequest request) {
         String username = authentication.getName();
-        CommandResponse response = userService.updateUser(username, request);
+        CommandResponse response = userService.updateMyInfo(username, request);
         return ResponseEntity.ok(response);
     }
 

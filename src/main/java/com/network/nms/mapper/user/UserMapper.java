@@ -2,6 +2,8 @@ package com.network.nms.mapper.user;
 
 import com.network.nms.domain.user.User;
 import com.network.nms.dto.user.AdminUserResponse;
+import com.network.nms.dto.user.UpdateUserRequest;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,7 +19,7 @@ public interface UserMapper {
     User findByUsername(String username);
 
     /** 회원정보 수정 **/
-    int updateUser(User user);
+    int updateMyInfo(User user);
 
     /** 회원탈퇴 **/
     int deleteByUserName(String username);
@@ -27,5 +29,8 @@ public interface UserMapper {
 
     /** 사용자 목록 조회 **/
     List<AdminUserResponse> findUsers(@Param("offset") int offset, @Param("size") int size, @Param("totalElements") long totalElements);
+
+    /** 관리자 회원정보 수정 **/
+    int updateUser(UpdateUserRequest request);
     
 }

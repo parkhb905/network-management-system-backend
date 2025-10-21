@@ -7,11 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateUserRequest {
+public class UpdateMyInfoRequest {
 
-    /** key **/
-    private Long userId;
-    
     /** 이름 **/
     // @NotBlank(message = "이름은 필수 입력 값입니다.")
     // @Size(min = 2, max = 20, message = "이름은 2~20자 이내로 입력해주세요.")
@@ -21,6 +18,11 @@ public class UpdateUserRequest {
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;
 
-    private String role;
+    /** 현재 비밀번호 **/
+    private String currentPassword;
+
+    /** 새 비밀번호 **/
+    @Size(min = 8, max = 20, message = "비밀번호는 8~20자 이내로 입력해주세요.")
+    private String newPassword;
 
 }
