@@ -8,12 +8,14 @@
     <insert id="insertUser" parameterType="com.network.nms.domain.user.User">
         INSERT INTO `user` (
             username
+            , name
             , email
             , password
             , role
             , created_at
         ) VALUES (
             #{username}
+            , #{name}
             , #{email}
             , #{password}
             , #{role}
@@ -23,8 +25,9 @@
 
     <select id="findByUsername" parameterType="string" resultType="com.network.nms.domain.user.User">
         SELECT
-            user_id
+            user_id AS userId
             , username
+            , name
             , email
             , password
             , role
@@ -36,7 +39,7 @@
             deleted = FALSE
     </select>
 
-    <update id="updateUser" parameterType="com.network.nms.domain.user.User">
+    <update id="updateMyInfo" parameterType="com.network.nms.domain.user.User">
         UPDATE
             `user`
         SET
@@ -66,7 +69,11 @@
                 #{totalElements} - ROW_NUMBER() OVER (ORDER BY created_at DESC) + 1 AS rownum
                 , user_id
                 , username
+                , name
+                , email
+                , role
                 , created_at
+                , updated_at
             FROM
                 `user`
             WHERE
@@ -87,5 +94,23 @@
         WHERE
             deleted = FALSE
     </select>
+
+    <update id="updateUser" parameterType="com.network.nms.dto.user.UpdateUserRequest">
+        UPDATE
+            `user`
+        SET
+            updated_at = NOW()
+            <if test="name != null">
+                , name = #{name}
+            </if>
+            <if test="email != null">
+                , email = #{email}
+            </if>
+            <if test="role != null">
+                , role = #{role}
+            </if>
+        WHERE
+            user_id = #{userId}
+    </update>
 
 </mapper>

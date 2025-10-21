@@ -4,6 +4,7 @@ import com.network.nms.domain.user.User;
 import com.network.nms.dto.common.CommandResponse;
 import com.network.nms.dto.common.PageResponse;
 import com.network.nms.dto.common.PagedQueryResponse;
+import com.network.nms.dto.user.UpdateMyInfoRequest;
 import com.network.nms.dto.user.UpdateUserRequest;
 import com.network.nms.dto.user.AdminUserResponse;
 import com.network.nms.exception.CustomException;
@@ -30,7 +31,7 @@ public class UserService {
      * @param request
      * @return
      */
-    public CommandResponse updateUser(String username, UpdateUserRequest request) {
+    public CommandResponse updateMyInfo(String username, UpdateMyInfoRequest request) {
         // 기존 회원정보 
         User user = userMapper.findByUsername(username);
 
@@ -49,7 +50,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         }
 
-        int result = userMapper.updateUser(user);
+        int result = userMapper.updateMyInfo(user);
         if(result != 1) {
             throw new CustomException(ErrorCode.DB_FAILED);
         }
@@ -83,6 +84,19 @@ public class UserService {
 
         PageResponse pageInfo = new PageResponse(page, size, totalElements, totalPages);
         return new PagedQueryResponse<>(true, content, pageInfo);
+    }
+
+    /**
+     * 관리자 회원정보 수정
+     * @param request
+     * @return
+     */
+    public CommandResponse updateUser(UpdateUserRequest request) {
+        int result = userMapper.updateUser(request);
+        if(result != 1) {
+            throw new CustomException(ErrorCode.DB_FAILED);
+        }
+        return new CommandResponse(true, result);
     }
 
 }

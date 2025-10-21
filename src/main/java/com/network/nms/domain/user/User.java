@@ -19,6 +19,9 @@ public class User {
     /** 아이디 **/
     private String username;
 
+    /** 이름 **/
+    private String name;
+
     /** 이메일 **/
     private String email;
 
