@@ -1,6 +1,8 @@
 package com.network.nms.mapper.dashboard;
 
 import com.network.nms.dto.dashboard.DeviceCpuUsageResponse;
+import com.network.nms.dto.dashboard.DeviceMemoryUsageResponse;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public interface DashboardMapper {
     List<Map<String, Object>> selectDeviceCountByVendor();
 
     /** CPU 사용률 TOP5 **/
-    List<DeviceCpuUsageResponse> selectTop5CpuUsage();
+    List<DeviceCpuUsageResponse> selectTop5CpuUsage(String period);
+    
+    /** MEMORY 사용률 TOP5 **/
+    List<DeviceMemoryUsageResponse> selectTop5MemoryUsage(String period);
 
 }

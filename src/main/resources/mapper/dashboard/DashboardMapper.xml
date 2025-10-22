@@ -45,7 +45,9 @@
             count DESC
     </select>
 
-    <select id="selectTop5CpuUsage" resultType="com.network.nms.dto.dashboard.DeviceCpuUsageResponse">
+    <select id="selectTop5CpuUsage" 
+            parameterType="String" 
+            resultType="com.network.nms.dto.dashboard.DeviceCpuUsageResponse">
         SELECT
             dv.device_name AS deviceName
             , ROUND(AVG(resource.cpu_usage), 2) AS avgCpuUsage
@@ -59,11 +61,47 @@
         WHERE
             dv.deleted = FALSE
         AND
-            RESOURCE.collected_at BETWEEN DATE_SUB(NOW(), INTERVAL 1 DAY) AND NOW()
+            resource.collected_at BETWEEN DATE_SUB(NOW(), INTERVAL 
+            <choose>
+                <when test="period == '24h'">1 DAY</when>
+                <when test="period == '7d'">7 DAY</when>
+                <otherwise>1 DAY</otherwise>
+            </choose>
+            ) AND NOW()
         GROUP BY
             dv.device_id
         ORDER BY
             avgCpuUsage DESC
+        LIMIT 5
+    </select>
+
+    <select id="selectTop5MemoryUsage" 
+            parameterType="String"
+            resultType="com.network.nms.dto.dashboard.DeviceMemoryUsageResponse">
+        SELECT
+            dv.device_name AS deviceName
+            , ROUND(AVG(resource.memory_usage), 2) AS avgMemoryUsage
+            , MAX(resource.collected_at) AS collectedAt
+        FROM
+            system_resource resource
+        INNER JOIN
+            device dv
+        ON
+            dv.device_id = resource.device_id
+        WHERE
+            dv.deleted = FALSE
+        AND
+            resource.collected_at BETWEEN DATE_SUB(NOW(), INTERVAL 
+            <choose>
+                <when test="period == '24h'">1 DAY</when>
+                <when test="period == '7d'">7 DAY</when>
+                <otherwise>1 DAY</otherwise>
+            </choose>
+            ) AND NOW()
+        GROUP BY
+            dv.device_id
+        ORDER BY
+            avgMemoryUsage DESC
         LIMIT 5
     </select>
 
