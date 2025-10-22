@@ -1,7 +1,9 @@
 package com.network.nms.service.dashboard;
 
+import com.network.nms.dto.common.PeriodType;
 import com.network.nms.dto.common.QueryResponse;
 import com.network.nms.dto.dashboard.DeviceCpuUsageResponse;
+import com.network.nms.dto.dashboard.DeviceMemoryUsageResponse;
 import com.network.nms.mapper.dashboard.DashboardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,10 +37,21 @@ public class DashboardService {
 
     /**
      * CPU 사용률 TOP5
+     * @param period 조회 기간 (24h, 7d)
      * @return
      */
-    public QueryResponse<List<DeviceCpuUsageResponse>> getTop5CpuUsage() {
-        List<DeviceCpuUsageResponse> list = dashboardMapper.selectTop5CpuUsage();
+    public QueryResponse<List<DeviceCpuUsageResponse>> getTop5CpuUsage(PeriodType period) {
+        List<DeviceCpuUsageResponse> list = dashboardMapper.selectTop5CpuUsage(period.getValue());
+        return new QueryResponse<>(true, list);
+    };
+    
+    /**
+     * MEMORY 사용률 TOP5
+     * @param period 조회 기간 (24h, 7d)
+     * @return
+     */
+    public QueryResponse<List<DeviceMemoryUsageResponse>> getTop5MemoryUsage(PeriodType period) {
+        List<DeviceMemoryUsageResponse> list = dashboardMapper.selectTop5MemoryUsage(period.getValue());
         return new QueryResponse<>(true, list);
     };
 
